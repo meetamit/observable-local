@@ -1,0 +1,100 @@
+body {
+  margin: 0;
+  font: 17px/1.5 Iowan Old Style,Apple Garamond,Baskerville,Palatino Linotype,Times New Roman,Droid Serif,Times,Source Serif Pro,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.variable {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  width: 100%;
+  /*padding: 0px 24px 0px 24px;*/
+  padding: 0px 26px 0px 26px;
+  margin: 5px 0 5px 0;
+  --hover-color: #eee;
+}
+.variable .title {
+  margin: 0 0 2px 0;
+  padding: 3px;
+  background: #eee;
+  font-size: 14px;
+  display: inline-block;
+}
+.variable .code {
+  font-family: menlo,consolas,monaco,monospace;
+  font-size: 13px;
+  line-height: 1.2;
+  margin: 2px 0 0 -14px;
+  padding: 0px 0px 0px 10px;
+  border-left: 4px solid #eee;
+  color: #999;
+}
+
+
+.variable .controls {
+  position: absolute;
+  opacity: 0;
+  left: 2px;
+  top: 0;
+  background: var(--hover-color);
+  min-height: 100%;
+  padding: 2px 1px;
+  border-radius: 10px;
+}
+.variable:hover .controls, .variable.hidden .controls {
+  opacity: 1;
+  transition: opacity .5s;
+}
+.variable.hidden {
+  margin: 0;
+  padding: 0;
+  width: 22px;
+}
+.variable.hidden .controls {
+  background: none;
+  left: 20px;
+}
+
+.circle-button {
+  width: 18px;
+  height: 18px;
+  padding: 0px;
+}
+.circle-button::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--color);
+  border: 1px solid var(--hover-color);
+}
+.circle-button.off {
+  padding: 1px;
+}
+.circle-button.off::after {
+  background: var(--hover-color);
+  border-color: var(--color);
+  border-width: 2px;
+}
+.variable.hidden .circle-button.off::after {
+  background: none;
+}
+.circle-button:not(.off):hover::after {
+  border-color: var(--color);
+}
+.circle-button.off:hover::after {
+  border-width: 3px;
+}
+.show-title.circle-button::after { --color: #28f; }
+.show-value.circle-button::after { --color: #ea3; }
+.show-code.circle-button::after { --color: #aaa; }
+
+.observablehq h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  line-height: 1.15;
+  color: #333;
+}
