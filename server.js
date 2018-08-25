@@ -1,4 +1,5 @@
 const http = require('http')
+const path = require('path')
 const connect = require('connect')
 const serveStatic = require('serve-static')
 const bodyParser = require('body-parser')
@@ -65,10 +66,11 @@ wss.broadcast = function(data) {
 
 // Watch for file changes and broadcast them via websocket
 var watcher = chokidar.watch('./notebooks').on('change', filepath => {
+  const filename = path.basename(filepath)
   wss.broadcast(
     JSON.stringify({
       event: 'update',
-      filename: filepath.match(/notebooks\/([^.]*)(\.js)?/)[1]
+      filename: filename.replace(path.extname(filename), '')
     })
   )
 })
