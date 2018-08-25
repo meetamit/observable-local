@@ -1,16 +1,18 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
     <link type="text/css" rel="stylesheet" href="/assets/notebook-inspector-style.css" >
     <link type="text/css" rel="stylesheet" href="/assets/style.css" >
     <script src="/assets/d3-selection.min.js"></script>
   </head>
   <body>
+    <div id='messages'></div>
     <div id='notebook'></div>
     <script type='module'>
       import { Runtime   } from '/assets/notebook-runtime.js'
       import { Library   } from '/assets/notebook-stdlib.js'
-      import { Inspector } from '/assets/notebook-inspector.js'
+      import { Inspector } from '/assets/notebook-inspector.js' // 'https://unpkg.com/@observablehq/notebook-inspector@1.1.4/dist/notebook-inspector.js'
       const d3 = window.d3
 
       const notebookName = (/\/run\/(?<file>[^.]*)(\.js)?/).exec(location.pathname).groups.file
@@ -39,9 +41,10 @@
           states = await fetch(`/notebook-views/${notebookName}.json?${Date.now()}`)
           states = states.ok ? await states.json() : null
           update(notebook, states)
+          document.querySelector('#messages').innerHTML = ''
         } catch (e) {
           console.log('Error Caught: ', e)
-          document.querySelector('#notebook').innerHTML = `
+          document.querySelector('#messages').innerHTML = `
             <div style='padding: 40px'>
               <h1>Error</h1>
               <h3>Could not import notebook <a href=${notebookPath}>${notebookPath}</a>:</h3>
@@ -102,17 +105,22 @@
                   .text(v.value ? formatValue(v.value) : null)
 
                 const controls = sel.append('div').attr('class', 'controls')
-                controls.append('div').attr('class', 'show-title circle-button')
+                controls.append('div')
+                  .attr('class', 'show-title circle-button')
+                  .attr('title', 'Show/Hide Name')
                   .on('click', () => {
                     state.title = !state.title
                     syncView(notebook)
                   })
-                controls.append('div').attr('class', 'show-value circle-button')
+                controls.append('div')
+                  .attr('class', 'show-value circle-button')
                   .on('click', () => {
                     state.value = !state.value
                     syncView(notebook)
                   })
-                controls.append('div').attr('class', 'show-code circle-button')
+                controls.append('div')
+                  .attr('class', 'show-code circle-button')
+                  .attr('title', 'Show/Hide Code')
                   .on('click', () => {
                     state.code = !state.code
                     syncView(notebook)
@@ -123,6 +131,13 @@
                 )
 
                 if (v.from) {
+                  // if (v.from.match(/^https?:\/\//)) {
+                  //   import(v.from).then(
+                  //     remoteModule => {
+                  //       console.log(remoteModule)
+                  //     }
+                  //   )
+                  // }
                   vImpl.import(v.remote, v.name, runtimeModule(v.from))
                 } else {
                   vImpl.define(v.name, v.inputs, v.value)
@@ -148,6 +163,8 @@
                   .classed('off', !state.title)
                   .style('display', hidden || !v.name ? 'none' : null)
                 sel.select('.show-value')
+                  .attr('title', `Show Cell ${hidden ? v.name : ''}"`)
+                  .attr('title', hidden && v.name ? `Show Cell "${v.name}"` : 'Show/Hide Cell')
                   .classed('off', hidden)
                 sel.select('.show-code')
                   .classed('off', !state.code)
@@ -193,6 +210,3 @@
     </script>
   </body>
 </html>
-
-
-
