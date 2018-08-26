@@ -98,3 +98,17 @@ body {
   line-height: 1.15;
   color: #333;
 }
+
+
+
+#messages {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 1;
+  border-bottom: 2px solid #ccc;
+}
+#messages h1 {
+  margin: 0;
+}
