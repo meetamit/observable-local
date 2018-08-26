@@ -17,8 +17,9 @@ app.use('/run', (req, res) => {
   res.end(fs.readFileSync('./assets/index.html', 'utf8'))
 })
 
-// serve assets as static files
-app.use('/assets', serveStatic('./assets'))
+// serve assets AND dist directories as static files
+app.use('/assets', serveStatic('./assets', { fallthrough: true }))
+app.use('/assets', serveStatic('./dist'))
 
 // serve notebooks as static files
 app.use('/notebooks', serveStatic('./notebooks'))

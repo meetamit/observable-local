@@ -3,7 +3,7 @@
   "version": "0.0.1-alpha.1",
   "description": "A local server of Observable notebooks. Edit notebooks locally (in your text editor), view results in your local browser, and more",
   "scripts": {
-    "start": "nodemon server.js --ignore notebooks/ --ignore views/",
+    "start": "nodemon server.js --ignore notebooks/ --ignore notebook-views/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,16 +12,20 @@
     "url": "http://www.meetamit.com"
   },
   "license": "BSD-3-Clause",
-  "devDependencies": {
-    "nodemon": "^1.18.3"
-  },
   "dependencies": {
     "body-parser": "^1.18.3",
     "chokidar": "^2.0.4",
     "connect": "^3.6.6",
-    "d3-selection": "^1.3.0",
     "esm": "^3.0.77",
     "serve-static": "^1.13.2",
     "ws": "^6.0.0"
+  },
+  "devDependencies": {
+    "@observablehq/notebook-runtime": "^1.5.1",
+    "d3-selection": "^1.3.0",
+    "nodemon": "^1.18.3",
+    "rollup": "^0.65.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-terser": "^1.0.1"
   }
 }
