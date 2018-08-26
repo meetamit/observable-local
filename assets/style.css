@@ -92,11 +92,38 @@ body {
 .show-title.circle-button::after { --color: #28f; }
 .show-value.circle-button::after { --color: #ea3; }
 .show-code.circle-button::after { --color: #aaa; }
+.rerun.circle-button::after { --color: #4d4; }
 
-.observablehq h1, h2, h3, h4, h5, h6 {
+.rerun {
+  position: absolute;
+  top: -18px;
+}
+
+.observablehq h1,
+.observablehq h2,
+.observablehq h3,
+.observablehq h4,
+.observablehq h5,
+.observablehq h6 {
   margin: 0;
   line-height: 1.15;
   color: #333;
+}
+.observablehq::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  top: 0;
+  bottom: 0;
+  background: #888;
+  opacity: 0;
+  z-index: 1;
+}
+.observablehq--running::after {
+  opacity: .85;
+}
+.observablehq:not(.observablehq--runing)::after {
+  transition: opacity .5s;
 }
 
 

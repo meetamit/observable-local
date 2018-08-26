@@ -171,6 +171,18 @@
                   vImpl.define(v.name, v.inputs, v.value)
                 }
                 impl.set(this, vImpl)
+
+                controls.append('div')
+                  .attr('class', 'rerun circle-button')
+                  .attr('title', 'Re-run cell')
+                  .on('click', function() {
+                    // re-run by redefining the variable
+                    if (v.from) {
+                      vImpl.import(v.remote, v.name, runtimeModule(v.from))
+                    } else {
+                      vImpl.define(v.name, v.inputs, v.value)
+                    }
+                  })
               })
             .merge(variable)
               .order()
@@ -197,6 +209,8 @@
                 sel.select('.show-code')
                   .classed('off', !state.code)
                   .style('display', hidden || !v.value ? 'none' : null)
+                sel.select('.rerun')
+                  .style('display', hidden ? 'none' : null)
 
               })
 
