@@ -6,20 +6,28 @@ const bodyParser = require('body-parser')
 const WebSocket = require('ws')
 const chokidar = require('chokidar')
 const chalk = require('chalk')
+const mkdirp = require('mkdirp')
 const fs = require('fs')
 
 const PORT = process.env.PORT || 7897
 const WS_PORT = process.env.WS_PORT || 7898
 const NOTEBOOKS_DIR = process.env.NOTEBOOKS_DIR || './notebooks'
 const VIEWS_DIR = process.env.VIEWS_DIR || './notebook-views'
+const FORCE = process.env.FORCE === 'true' || process.env.FORCE === true ? true : false
 
+if (FORCE) {
+  console.log(chalk.blue(`Creating directory "${path.resolve(NOTEBOOKS_DIR)}"`))
+  console.log(chalk.blue(`Creating directory "${path.resolve(VIEWS_DIR)}"`))
+  mkdirp.sync(NOTEBOOKS_DIR)
+  mkdirp.sync(VIEWS_DIR)
+}
 
 if (!fs.existsSync(NOTEBOOKS_DIR)) {
   console.error(
     chalk.bold.red(`
-Directory "${NOTEBOOKS_DIR}" doesn't exist.
+Directory "${path.resolve(NOTEBOOKS_DIR)}" doesn't exist.
     `) + chalk.bold.blue(`
-For more info, run \`observable-local --help\`
+Run with -f (--force) to have the directories created for you. For more info, run \`observable-local --help\`
   `))
   process.exit(1)
 }
@@ -105,6 +113,8 @@ const existingNotebooks = fs.readdirSync(NOTEBOOKS_DIR)
 if (existingNotebooks.length === 0) {
   fs.createReadStream(appPath(`./notebooks/${suggestedNotebook}`))
     .pipe(fs.createWriteStream(`./${NOTEBOOKS_DIR}/${suggestedNotebook}`))
+  fs.createReadStream(appPath(`./notebook-views/${suggestedNotebook}on`))
+    .pipe(fs.createWriteStream(`./${VIEWS_DIR}/${suggestedNotebook}on`))
 } else if (existingNotebooks.indexOf(suggestedNotebook) == -1) {
   // pick a random notebook
   suggestedNotebook = existingNotebooks[Math.floor(Math.random() * existingNotebooks.length)]
