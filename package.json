@@ -3,7 +3,7 @@
   "version": "0.0.1-alpha.1",
   "description": "A local server of Observable notebooks. Edit notebooks locally (in your text editor), view results in your local browser, and more",
   "scripts": {
-    "development": "nodemon server.js --ignore notebooks/ --ignore notebook-views/",
+    "development": "nodemon server.js --ignore notebooks/ --ignore notebook-views/ --ignore dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -22,15 +22,18 @@
     "commander": "^2.17.1",
     "connect": "^3.6.6",
     "esm": "^3.0.77",
+    "marked": "^0.5.0",
     "mkdirp": "^0.5.1",
     "serve-static": "^1.13.2",
     "ws": "^6.0.0"
   },
   "devDependencies": {
+    "@observablehq/highlight.js": "^1.1.1",
     "@observablehq/notebook-runtime": "^1.5.1",
     "d3-selection": "^1.3.0",
     "nodemon": "^1.18.3",
     "rollup": "^0.65.0",
+    "rollup-plugin-commonjs": "^9.1.6",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-terser": "^1.0.1"
   }

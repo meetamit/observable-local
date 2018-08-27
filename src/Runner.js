@@ -1,6 +1,8 @@
 import resolveExternalImports from './resolveExternalImports'
 import { Runtime, Library, Inspector } from '@observablehq/notebook-runtime'
 import { select, local } from 'd3-selection'
+import marked from 'marked'
+import highlightjs from '@observablehq/highlight.js'
 
 const impl = local()
 const viewstate = local()
@@ -8,7 +10,14 @@ const viewstate = local()
 export default class Runner {
   constructor(el) {
     this.el = el
-    this.runtime = new Runtime(new Library)
+    const stdlib = new Library
+    const alias = stdlib.require().alias({'foo':'joe'})
+    const stdlibRequire = stdlib.require()
+    this.runtime = new Runtime(new Library(async name => {
+      if (name.indexOf('marked') === 0 ) { return marked }
+      if (name.indexOf('@observablehq/highlight.js') === 0 ) { return highlightjs }
+      return stdlibRequire(name)
+    }))
   }
 
   async connectWebSocket() {
@@ -77,6 +86,8 @@ export default class Runner {
             const inspector = sel.append('div').attr('class', 'inspector')
             sel.append('pre').attr('class', 'code')
               .text(v.value ? formatCode(v.value) : null)
+              .classed('javascript', true)
+              .each(function() { highlightjs.highlightBlock(this) })
 
             const controls = sel.append('div').attr('class', 'controls')
             controls.append('div')
