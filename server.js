@@ -43,6 +43,21 @@ app.use('/run', (req, res) => {
 app.use('/assets', serveStatic(appPath('./assets'), { fallthrough: true }))
 app.use('/assets', serveStatic(appPath('./dist')))
 
+// serve notebooks directory listing as json
+app.use('/notebooks', function(req, res, next) {
+  if (req.url === '/') {
+    res.setHeader('Content-Type', 'application/json')
+    fs.readdir(NOTEBOOKS_DIR, (err, listing) => {
+      if (err) {
+        console.log(chalk.red(err))
+      } else {
+        res.end(JSON.stringify(listing))
+      }
+    })
+  } else {
+    next()
+  }
+})
 // serve notebooks as static files
 app.use('/notebooks', serveStatic(NOTEBOOKS_DIR))
 
