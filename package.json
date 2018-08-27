@@ -3,7 +3,7 @@
   "version": "0.0.1-alpha.1",
   "description": "A local server of Observable notebooks. Edit notebooks locally (in your text editor), view results in your local browser, and more",
   "scripts": {
-    "start": "nodemon server.js --ignore notebooks/ --ignore notebook-views/",
+    "development": "nodemon server.js --ignore notebooks/ --ignore notebook-views/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,10 +11,15 @@
     "name": "Amit Schechter",
     "url": "http://www.meetamit.com"
   },
+  "bin": {
+    "observable-local": "bin/observable-local"
+  },
   "license": "BSD-3-Clause",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
     "chokidar": "^2.0.4",
+    "commander": "^2.17.1",
     "connect": "^3.6.6",
     "esm": "^3.0.77",
     "serve-static": "^1.13.2",

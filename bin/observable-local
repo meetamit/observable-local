@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+const commander = require('commander')
+const path = require('path')
+
+// var program = path.basename(process.argv[1]),
+//     defaultInDelimiter = program.slice(0, 3) === 'tsv' ? '\t' : ','
+
+commander
+  .version(require('../package.json').version)
+  .usage('<cmd> [options]')
+  .command('serve [options]', 'start a local server to serve notebooks')
+  .parse(process.argv);
+
