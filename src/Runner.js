@@ -2,6 +2,7 @@ import resolveExternalImports from './resolveExternalImports'
 import { Runtime, Library, Inspector } from '@observablehq/notebook-runtime'
 import { select, local } from 'd3-selection'
 import marked from 'marked'
+import katex from '@observablehq/katex'
 import highlightjs from '@observablehq/highlight.js'
 
 const impl = local()
@@ -11,10 +12,10 @@ export default class Runner {
   constructor(el) {
     this.el = el
     const stdlib = new Library
-    const alias = stdlib.require().alias({'foo':'joe'})
     const stdlibRequire = stdlib.require()
     this.runtime = new Runtime(new Library(async name => {
       if (name.indexOf('marked') === 0 ) { return marked }
+      if (name.indexOf('@observablehq/katex') === 0 ) { return katex }
       if (name.indexOf('@observablehq/highlight.js') === 0 ) { return highlightjs }
       return stdlibRequire(name)
     }))
@@ -196,6 +197,9 @@ export default class Runner {
     return module;
   }
 
+  notebook(_) {
+    return arguments.length ? ((this.notebook = _), this) : this.notebook
+  }
   notebookName(_) {
     return arguments.length ? ((this.notebookName = _), this) : this.notebookName
   }
