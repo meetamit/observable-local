@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 7897
 const WS_PORT = process.env.WS_PORT || 7898
 const NOTEBOOKS_DIR = process.env.NOTEBOOKS_DIR || './notebooks'
 const VIEWS_DIR = process.env.VIEWS_DIR || './notebook-views'
+const PUBLIC_DIR = process.env.PUBLIC_DIR || null
 const FORCE = process.env.FORCE === 'true' || process.env.FORCE === true ? true : false
 
 if (FORCE) {
@@ -36,6 +37,7 @@ const app = connect()
 
 // route that serves an html that loads a notebook and opens a websocket to recieve change events
 app.use('/run', (req, res) => {
+  res.setHeader('Content-Type', 'text/html')
   res.end(fs.readFileSync(appPath('./assets/index.html'), 'utf8'))
 })
 
@@ -86,6 +88,12 @@ if (!fs.existsSync(VIEWS_DIR)) {
     }
   })
   app.use('/notebook-views', serveStatic(VIEWS_DIR))
+}
+
+if (PUBLIC_DIR && fs.existsSync(PUBLIC_DIR)) {
+  // serve static files from a user-specified public directory
+  console.log(chalk.blue(`Serving "${path.resolve(PUBLIC_DIR)}" as static directory`))
+  app.use('/', serveStatic(PUBLIC_DIR))
 }
 
 

@@ -7,7 +7,13 @@
 - [x] Executable for running from `node_modules/.bin`
 - [ ] require a `.writable-notebook-views` file in the views directory, for safety
 - [x] Commandline args `--notebooks` and `--views`
-- [ ] MAYBE: optionally webpack notebooks into bundles
+- [ ] MAYBE: optionally Rollup notebooks into bundles
+- [ ] MAYBE: split Runner into Presenter and Sync'er??
+
+### Extendability (congif file)
+
+- [ ] set additional builtins (e.g. d3, vega)
+- [ ] custom-resolve modules
 
 #### Bugs
 
