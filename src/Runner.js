@@ -25,7 +25,8 @@ export default class Runner {
     const ws = new WebSocket(await (await fetch('/socket')).text())
     ws.onmessage = message => {
       const { event, filename } = JSON.parse(message.data)
-      if (event === 'update' && filename === this.notebookName) {
+      if (event === 'update') {
+        this.changedNotebook = filename
         this.syncNotebook()
       }
     }
@@ -37,7 +38,7 @@ export default class Runner {
     const notebookPath = `/notebooks/${this.notebookName}.js`
     try {
       notebook = ( await import(`${notebookPath}?${Date.now()}`) ).default
-      await resolveExternalImports(notebook, select('#notebook').datum())
+      await resolveExternalImports(notebook, select('#notebook').datum(), this.changedNotebook)
       states = await fetch(`/notebook-views/${this.notebookName}.json?${Date.now()}`)
       states = states.ok ? await states.json() : null
       this.update(notebook, states)
