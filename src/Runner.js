@@ -161,7 +161,7 @@ export default class Runner {
               .classed('off', !state.code)
               .style('display', hidden || !v.value ? 'none' : null)
             sel.select('.rerun')
-              .style('display', hidden ? 'none' : null)
+              .style('display', true || hidden ? 'none' : null)
 
           })
 

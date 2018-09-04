@@ -14,6 +14,7 @@
 
 - [ ] set additional builtins (e.g. d3, vega)
 - [ ] custom-resolve modules
+- [ ] custom css (page max width, classes that can be applied to cells)
 
 #### Bugs
 

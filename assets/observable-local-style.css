@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font: 17px/1.5 Iowan Old Style,Apple Garamond,Baskerville,Palatino Linotype,Times New Roman,Droid Serif,Times,Source Serif Pro,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+  font: 16px/1.5 Iowan Old Style,Apple Garamond,Baskerville,Palatino Linotype,Times New Roman,Droid Serif,Times,Source Serif Pro,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -124,14 +124,24 @@ body {
 .observablehq:not(.observablehq--runing)::after {
   transition: opacity .5s;
 }
+.observablehq code {
+  font-size: 14px;
+  line-height: 1.2;
+}
+.observablehq p code {
+  background: #f2f2f2;
+  border: 1px solid #aaa;
+  padding: 0px 4px;
+  color: #555;
+}
 
 
 
 #messages {
   position: fixed;
-  top: 0;
+  top: -2px;
   width: 100%;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   z-index: 1;
   border-bottom: 2px solid #ccc;
 }
