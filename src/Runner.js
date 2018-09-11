@@ -9,8 +9,9 @@ const impl = local()
 const viewstate = local()
 
 export default class Runner {
-  constructor(el) {
+  constructor(el, urlBase) {
     this.el = el
+    this.urlBase = urlBase || ''
     const stdlib = new Library
     const stdlibRequire = stdlib.require()
     this.runtime = new Runtime(new Library(async name => {
@@ -21,8 +22,9 @@ export default class Runner {
     }))
   }
 
-  async connectWebSocket() {
-    const ws = new WebSocket(await (await fetch('/socket')).text())
+  async connectWebSocket(address) {
+    // unless websocket address (incl. port) is specified, try to detect it be fetching `/socket`
+    const ws = new WebSocket(address || (await (await fetch('/socket')).text()))
     ws.onmessage = message => {
       const { event, filename } = JSON.parse(message.data)
       if (event === 'update') {
@@ -35,11 +37,11 @@ export default class Runner {
 
   async syncNotebook() {
     let notebook, states
-    const notebookPath = `/notebooks/${this.notebookName}.js`
+    const notebookPath = `${this.urlBase}/notebooks/${this.notebookName}.js`
     try {
       notebook = ( await import(`${notebookPath}?${Date.now()}`) ).default
-      await resolveExternalImports(notebook, select('#notebook').datum(), this.changedNotebook)
-      states = await fetch(`/notebook-views/${this.notebookName}.json?${Date.now()}`)
+      await resolveExternalImports(notebook, this.urlBase, select('#notebook').datum(), this.changedNotebook)
+      states = await fetch(`${this.urlBase}/notebook-views/${this.notebookName}.json?${Date.now()}`)
       states = states.ok ? await states.json() : null
       this.update(notebook, states)
       document.querySelector('#messages').innerHTML = ''

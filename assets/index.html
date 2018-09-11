@@ -2,19 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <link type="text/css" rel="stylesheet" href="/assets/notebook-inspector-style.css" >
-    <link type="text/css" rel="stylesheet" href="/assets/observable-local-style.css" >
-    <link type="text/css" rel="stylesheet" href="/assets/highlightjs-xcode-style.css " >
-    <link type="text/css" rel="stylesheet" href="/assets/katex.css " >
-    <script src="/assets/observable-local.js"></script>
+    <link type="text/css" rel="stylesheet" href="notebook-inspector-style.css" >
+    <link type="text/css" rel="stylesheet" href="observable-local-style.css" >
+    <link type="text/css" rel="stylesheet" href="highlightjs-xcode-style.css" >
+    <link type="text/css" rel="stylesheet" href="katex.css" >
+    <script src="observable-local.js"></script>
   </head>
   <body>
     <div id='messages'></div>
     <div id='notebook'></div>
     <script type='text/javascript'>
+      const notebookName = location.hash
+        ? (/notebook=(?<file>[^&]*)/).exec(location.hash).groups.file
+        : (/\/run\/(?<file>[^.]*)(\.js)?/).exec(location.pathname).groups.file
       ObservableLocal.start(
-        (/\/run\/(?<file>[^.]*)(\.js)?/).exec(location.pathname).groups.file,
-        document.getElementById('notebook')
+        notebookName,
+        document.getElementById('notebook'),
+        { liveUpdate: true }
       )
     </script>
   </body>

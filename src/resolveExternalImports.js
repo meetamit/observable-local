@@ -1,4 +1,4 @@
-export default async function (notebook, prevNotebook, changedNotebookName) {
+export default async function (notebook, urlBase, prevNotebook, changedNotebookName) {
   // TODO: This process of gathering external urls and importing those modules should repeat
   // until no more external imports are found. Otherwise, if a remote module in turn imports
   // another remote module, the latter wouldn't be detected nor imported.
@@ -41,7 +41,7 @@ export default async function (notebook, prevNotebook, changedNotebookName) {
     } else {
       // external must be imported
       // console.log('importing', external)
-      const remoteNotebook = (await import(`${external}?${Date.now()}`)).default
+      const remoteNotebook = (await import(`${external.charAt(0) === '/' ? urlBase : ''}${external}?${Date.now()}`)).default
       // console.log('remoteNotebook',remoteNotebook)
       remoteNotebook.modules.forEach(m => {
         notebook.modules.push({...m, external: external, id: m.id === remoteNotebook.id ? external : m.id})

@@ -142,7 +142,7 @@ if (existingNotebooks.length === 0) {
   // pick a random notebook
   suggestedNotebook = existingNotebooks[Math.floor(Math.random() * existingNotebooks.length)]
 }
-const suggestedUrl = `http://localhost:${PORT}/run/${suggestedNotebook}`
+const suggestedUrl = `http://localhost:${PORT}/run/${suggestedNotebook.replace(/.js$/, '')}`
 
 console.log(`
   Server listening on port ${PORT}
