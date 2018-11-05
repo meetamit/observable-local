@@ -16,7 +16,10 @@ export default class Runner {
     const stdlibRequire = stdlib.require()
     this.runtime = new Runtime(new Library(async name => {
       if (name.indexOf('marked') === 0 ) { return marked }
-      if (name.indexOf('@observablehq/katex') === 0 ) { return katex }
+      if (name.indexOf('@observablehq/katex') === 0 ) {
+        if (name.endsWith('.js')) { return katex }
+        else /* it's a .css */ { return stdlibRequire(name).catch(e => null) }
+      }
       if (name.indexOf('@observablehq/highlight.js') === 0 ) { return highlightjs }
       return stdlibRequire(name)
     }))
