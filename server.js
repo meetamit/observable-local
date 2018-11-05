@@ -120,7 +120,16 @@ wss.broadcast = function(data) {
 }
 
 // Watch for file changes and broadcast them via websocket
-var watcher = chokidar.watch(NOTEBOOKS_DIR).on('change', filepath => {
+var watcher = chokidar.watch(NOTEBOOKS_DIR).on('change', (filepath, meta) => {
+  const accessTime = meta && meta.atime && meta.atime.getTime()
+  const modifyTime = meta && meta.mtime && meta.mtime.getTime()
+  // In certain cases (specifically on Windows and possibly only when
+  // files are on a network drive), Chokidar triggers events even if the
+  // file was simply accessed (as opposed to modified), which in-turn
+  // can create infinite update loops. To avoid this, we compare timestamps
+  // and only proceed if modifiedTime is as recent as accessTime
+  if (accessTime > modifyTime) { return }
+
   console.log(chalk.blue(`Change detected in "${filepath}"`))
   const filename = path.basename(filepath)
   wss.broadcast(
