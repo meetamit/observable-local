@@ -35,15 +35,15 @@ Run with -f (--force) to have the directories created for you. For more info, ru
 
 const app = connect()
 
+// serve assets AND dist directories as static files
+app.use('/run', serveStatic(appPath('./assets'), { fallthrough: true }))
+app.use('/run', serveStatic(appPath('./dist'  ), { fallthrough: true }))
+
 // route that serves an html that loads a notebook and opens a websocket to recieve change events
 app.use('/run', (req, res) => {
   res.setHeader('Content-Type', 'text/html')
   res.end(fs.readFileSync(appPath('./assets/index.html'), 'utf8'))
 })
-
-// serve assets AND dist directories as static files
-app.use('/assets', serveStatic(appPath('./assets'), { fallthrough: true }))
-app.use('/assets', serveStatic(appPath('./dist')))
 
 // serve notebooks directory listing as json
 app.use('/notebooks', function(req, res, next) {
