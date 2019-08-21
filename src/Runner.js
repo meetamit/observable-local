@@ -1,9 +1,11 @@
 import resolveExternalImports from './resolveExternalImports'
-import { Runtime, Library, Inspector } from '@observablehq/notebook-runtime'
+import { Runtime, Library, Inspector } from '@observablehq/runtime'
 import { select, local } from 'd3-selection'
-import marked from 'marked'
-import katex from '@observablehq/katex'
-import highlightjs from '@observablehq/highlight.js'
+import marked from 'marked' // 19k-20k
+import katex from '@observablehq/katex' // ~240K
+import hljs from 'highlight.js/lib/highlight' // ~33K
+import javascript from 'highlight.js/lib/languages/javascript' // ~0K
+hljs.registerLanguage('javascript', javascript);
 
 const impl = local()
 const viewstate = local()
@@ -20,7 +22,7 @@ export default class Runner {
         if (name.endsWith('.js')) { return katex }
         else /* it's a .css */ { return stdlibRequire(name).catch(e => null) }
       }
-      if (name.indexOf('@observablehq/highlight.js') === 0 ) { return highlightjs }
+      if (name.indexOf('@observablehq/highlight.js') === 0 ) { return hljs }
       return stdlibRequire(name)
     }))
   }
@@ -94,7 +96,7 @@ export default class Runner {
             sel.append('pre').attr('class', 'code')
               .text(v.value ? formatCode(v.value) : null)
               .classed('javascript', true)
-              .each(function() { highlightjs.highlightBlock(this) })
+              .each(function() { hljs.highlightBlock(this) })
 
             const controls = sel.append('div').attr('class', 'controls')
             controls.append('div')
