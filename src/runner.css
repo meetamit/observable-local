@@ -113,7 +113,6 @@ body {
   width: 6px;
   top: 0;
   bottom: 0;
-  background: #888;
   opacity: 0;
   z-index: 1;
 }

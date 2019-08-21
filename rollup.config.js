@@ -2,6 +2,7 @@ import * as meta from "./package.json";
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import {terser} from 'rollup-plugin-terser';
+import css from 'rollup-plugin-css-only'
 
 const config = {
   input: "src/index.js",
@@ -12,7 +13,11 @@ const config = {
     indent: false,
     extend: true,
   },
-  plugins: [resolve(), commonjs()]
+  plugins: [
+    resolve(),
+    commonjs(),
+    css({ output: 'dist/bundle.css' }),
+  ]
 };
 
 export default [
