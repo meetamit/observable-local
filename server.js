@@ -3,6 +3,7 @@ const path = require('path')
 const connect = require('connect')
 const serveStatic = require('serve-static')
 const bodyParser = require('body-parser')
+const compression = require('compression')
 const WebSocket = require('ws')
 const chokidar = require('chokidar')
 const chalk = require('chalk')
@@ -34,6 +35,7 @@ Run with -f (--force) to have the directories created for you. For more info, ru
 }
 
 const app = connect()
+app.use(compression())
 
 // serve dist directory as static files
 app.use('/run', serveStatic(appPath('./dist'  ), { fallthrough: true }))
