@@ -15,7 +15,10 @@
       ObservableLocal.start(
         notebookName,
         document.getElementById('notebook'),
-        { liveUpdate: true }
+        {
+          liveUpdate: true,
+          messages: document.getElementById('messages'),
+        }
       )
     </script>
   </body>

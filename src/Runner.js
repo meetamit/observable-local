@@ -15,9 +15,10 @@ const impl = local()
 const viewstate = local()
 
 export default class Runner {
-  constructor(el, urlBase) {
+  constructor({el, urlBase, messages}) {
     this.el = el
     this.urlBase = urlBase || ''
+    this.messages = messages || document.createElement('div')
     const stdlib = new Library
     const stdlibRequire = stdlib.require()
     this.runtime = new Runtime(new Library(async name => {
@@ -53,10 +54,10 @@ export default class Runner {
       states = await fetch(`${this.urlBase}/notebook-views/${this.notebookName}.json?${Date.now()}`)
       states = states.ok ? await states.json() : null
       this.update(notebook, states)
-      document.querySelector('#messages').innerHTML = ''
+      this.messages.innerHTML = ''
     } catch (e) {
       console.log('Error Caught: ', e)
-      document.querySelector('#messages').innerHTML = `
+      this.messages.innerHTML = `
         <div style='padding: 40px'>
           <h1>Error</h1>
           <h3>Could not import notebook <a href=${notebookPath}>${notebookPath}</a>:</h3>
