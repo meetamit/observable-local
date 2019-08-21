@@ -125,7 +125,9 @@ export default class Runner {
               })
 
             const vImpl = mImpl.variable(
-              m.id === notebook.id ? new Inspector(inspector.node()) : null
+              m.id === notebook.id
+                ? new Inspector(inspector.node())
+                : { rejected: console.error.bind(console, { module: m }) }
             )
 
             if (v.from) {
