@@ -1,22 +1,29 @@
 export default async function (notebook, urlBase, prevNotebook, changedNotebookName) {
-  // TODO: This process of gathering external urls and importing those modules should repeat
-  // until no more external imports are found. Otherwise, if a remote module in turn imports
-  // another remote module, the latter wouldn't be detected nor imported.
+  let externals
+  do {
+    externals = await resolve(notebook, urlBase, prevNotebook, changedNotebookName)
+  } while (externals && externals.size > 0)
+  return externals
+}
+
+async function resolve (notebook, urlBase, prevNotebook, changedNotebookName) {
   const externals = new Set()
-  notebook.modules.forEach(m => {
-    m.variables.forEach((v,j) => {
+  notebook.modules.concat().forEach(m => {
+    m.variables.concat(/*clone bc may mutate the original*/).forEach(v => {
       if (v.from && Array.isArray(v.remote)) {
+        const j = m.variables.indexOf(v)
         m.variables.splice(j, 1) // remove the multi-import
         v.remote.forEach((_v, k) => {
           // add the import using normal syntax
           m.variables.splice(j + k, 0, {
-          // m.variables.push({
+            ...v,
             from:   v.from,
             name:   typeof _v === 'string' ? _v : _v.as,
             remote: typeof _v === 'string' ? _v : _v.name
           })
         })
       }
+      if (v.remote && !v.name) { v.name = v.remote }
     })
 
     m.variables.forEach(v => {
@@ -25,10 +32,12 @@ export default async function (notebook, urlBase, prevNotebook, changedNotebookN
       }
     })
   })
+
   for (let external of externals) {
     if (notebook.modules.find(m => m.id === external)) {
       // external is actually embedded in notebook, so do nothing
       // console.log('actually have', external)
+      externals.delete(external)
     } else if (prevNotebook && !external.match(new RegExp(`/${changedNotebookName}.js`)) && prevNotebook.modules.find(m => m.id === external)) {
       // external is available in the previous notebook and can be copied over
       // (we don't do this if we know that the imported notebook has changed)
@@ -44,6 +53,37 @@ export default async function (notebook, urlBase, prevNotebook, changedNotebookN
       const remoteNotebook = (await import(`${external.charAt(0) === '/' ? urlBase : ''}${external}?${Date.now()}`)).default
       // console.log('remoteNotebook',remoteNotebook)
       remoteNotebook.modules.forEach(m => {
+        if (m.id === remoteNotebook.id) {
+          // console.log("Look for importation of", external, 'in', notebook.modules.find(m => m.id === notebook.id))
+          // const importation = notebook.modules.find(m => m.id === notebook.id).variables.find(v => v.from === external)
+          notebook.modules.forEach(_m => {
+            _m.variables.concat().forEach(v => {
+              if (v.from === external && v.with) {
+                if (v.with && !Array.isArray(v.with)) { v.with = [v.with] }
+                v.with.forEach(w => {
+                  const replaced = m.variables.find(v => v.name === w)
+                  m.variables.splice(m.variables.indexOf(replaced), 1, {
+                    from: _m.id,
+                    remote: typeof w === 'string' ? w : w.as,
+                    name: typeof w === 'string' ? w : w.name,
+                  })
+                })
+              }
+            })
+          })
+        } else {
+          // any derivation (reciprocal imports) that refered to
+          // the external -- now renamed -- module must be renamed too
+          notebook.modules.forEach(_m => {
+            _m.variables.concat().forEach(v => {
+              if (v.from === remoteNotebook.id) {
+                _m.variables.splice(_m.variables.indexOf(v), 1, {
+                  ...v, from: external
+                })
+              }
+            })
+          })
+        }
         notebook.modules.push({...m, external: external, id: m.id === remoteNotebook.id ? external : m.id})
         // console.log('add remote', m)
       })
