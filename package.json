@@ -1,6 +1,7 @@
 {
   "name": "observable-local",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
+  "main": "dist/observable-local.js",
   "description": "A local server of Observable notebooks. Edit notebooks locally (in your text editor), view results in your local browser, and more",
   "scripts": {
     "development": "nodemon server.js --ignore notebooks/ --ignore notebook-views/ --ignore dist/",
@@ -23,8 +24,6 @@
     "commander": "^2.20.0",
     "connect": "^3.7.0",
     "esm": "^3.2.25",
-    "katex": "^0.10.2",
-    "marked": "^0.5.2",
     "mkdirp": "^0.5.1",
     "serve-static": "^1.14.1",
     "ws": "^6.2.1"
@@ -35,6 +34,7 @@
     "compression": "^1.7.4",
     "d3-selection": "^1.4.0",
     "highlight.js": "^9.15.10",
+    "marked": "^0.7.0",
     "nodemon": "^1.19.1",
     "rollup": "^1.19.4",
     "rollup-plugin-commonjs": "^9.3.4",
