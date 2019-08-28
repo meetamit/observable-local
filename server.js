@@ -42,9 +42,10 @@ app.use('/run', serveStatic(appPath('./dist'  ), { fallthrough: true }))
 
 // route that serves an html that loads a notebook and opens a websocket to recieve change events
 app.use('/run', (req, res) => {
-  // see if there's a named html view from this notebook, to serve
-  // instead of the default html
-  let htmlView = appPath(`${VIEWS_DIR}${req.url}.html`)
+  // See if there's a named html view for this notebook. If so, to serve instead of the default html
+  // Expected name is the notebook's name UNLESS explicitly specified in query (?view=aview.html)
+  const htmlViewName = (req.url.match(/[?&]view=([^&]*)/i) && RegExp.$1) || req.url.substr(1)
+  let htmlView = appPath(`${VIEWS_DIR}/${htmlViewName}.html`)
   if(!fs.existsSync(htmlView)) {
     htmlView = appPath('./dist/index.html')
   }
