@@ -82,7 +82,7 @@ export default class Runner {
       .each(function (m, i) {
         const mImpl = impl.get(this)
         let variable = select(this).selectAll('div.variable')
-          .data(d => d.variables, comparable)
+          .data(m => m.variables, comparable)
 
         variable.enter()
           .append('div').attr('class', 'variable')
@@ -97,7 +97,19 @@ export default class Runner {
             const sel = select(this)
             sel.append('pre').attr('class', 'title')
               .text(v.name ? v.name + ':' : null)
-            const inspector = sel.append('div').attr('class', 'inspector')
+
+            const inspector = sel
+              .select(function() {
+                // If there's a predefined element with this variable's name...
+                const predefined =  document.querySelector(`[data-variable="${v.name}"`)
+                // ...and, if it's the main module of the notebook (WARNING: this also avoids name collision)
+                if (m.id !== notebook.id) { return this }
+                // ...then use the element as the inspector's parent node
+                if (predefined) { predefined.innerHTML = '' }
+                return predefined || this
+              } ).append('div')
+              .attr('class', 'inspector')
+
             sel.append('pre').attr('class', 'code')
               .text(v.value ? formatCode(v.value) : null)
               .classed('javascript', true)
