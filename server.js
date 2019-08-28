@@ -42,8 +42,14 @@ app.use('/run', serveStatic(appPath('./dist'  ), { fallthrough: true }))
 
 // route that serves an html that loads a notebook and opens a websocket to recieve change events
 app.use('/run', (req, res) => {
+  // see if there's a named html view from this notebook, to serve
+  // instead of the default html
+  let htmlView = appPath(`${VIEWS_DIR}${req.url}.html`)
+  if(!fs.existsSync(htmlView)) {
+    htmlView = appPath('./dist/index.html')
+  }
   res.setHeader('Content-Type', 'text/html')
-  res.end(fs.readFileSync(appPath('./dist/index.html'), 'utf8'))
+  res.end(fs.readFileSync(htmlView, 'utf8'))
 })
 
 // serve notebooks directory listing as json
