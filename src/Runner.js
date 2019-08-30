@@ -5,6 +5,7 @@ import marked from 'marked' // 19k-20k
 import katex from '@observablehq/katex' // ~240K
 import hljs from 'highlight.js/lib/highlight' // ~33K
 import javascript from 'highlight.js/lib/languages/javascript' // ~0K
+import './player.css'
 import './runner.css'
 import 'highlight.js/styles/xcode.css'
 import '@observablehq/katex/katex.css'

@@ -18,14 +18,19 @@
   },
   "license": "BSD-3-Clause",
   "dependencies": {
+    "acorn": "^7.0.0",
+    "astring": "^1.4.1",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
+    "cheerio": "^1.0.0-rc.3",
     "chokidar": "^2.1.6",
     "commander": "^2.20.0",
     "connect": "^3.7.0",
     "esm": "^3.2.25",
     "mkdirp": "^0.5.1",
+    "rollup": "^1.19.4",
     "serve-static": "^1.14.1",
+    "to-ast": "^1.0.0",
     "ws": "^6.2.1"
   },
   "devDependencies": {
@@ -36,7 +41,6 @@
     "highlight.js": "^9.15.10",
     "marked": "^0.7.0",
     "nodemon": "^1.19.1",
-    "rollup": "^1.19.4",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-css-only": "^1.0.0",

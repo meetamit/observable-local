@@ -17,7 +17,7 @@ const config = {
   plugins: [
     resolve(),
     commonjs(),
-    css({ output: 'dist/bundle.css' }),
+    css({ output: `dist/${meta.name}.css` }),
   ]
 };
 

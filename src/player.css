@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  font: 16px/1.5 Iowan Old Style,Apple Garamond,Baskerville,Palatino Linotype,Times New Roman,Droid Serif,Times,Source Serif Pro,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.observablehq h1,
+.observablehq h2,
+.observablehq h3,
+.observablehq h4,
+.observablehq h5,
+.observablehq h6 {
+  margin: 0;
+  line-height: 1.15;
+  color: #333;
+}
+.observablehq::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  z-index: 1;
+}
+.observablehq--running::after {
+  opacity: .85;
+}
+.observablehq:not(.observablehq--runing)::after {
+  transition: opacity .5s;
+}
+.observablehq code {
+  font-size: 14px;
+  line-height: 1.2;
+}
+.observablehq p code {
+  background: #f2f2f2;
+  border: 1px solid #aaa;
+  padding: 0px 4px;
+  color: #555;
+}

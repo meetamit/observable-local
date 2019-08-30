@@ -2,24 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <link type="text/css" rel="stylesheet" href="bundle.css" >
-    <script src="observable-local.js"></script>
   </head>
   <body>
-    <div id='messages'></div>
-    <div id='notebook'></div>
-    <script type='text/javascript'>
-      const notebookName = location.hash
-        ? (/notebook=(?<file>[^&]*)/).exec(location.hash).groups.file
-        : (/\/run\/(?<file>[^.]*)(\.js)?/).exec(location.pathname).groups.file
-      ObservableLocal.start(
-        notebookName,
-        document.getElementById('notebook'),
-        {
-          liveUpdate: true,
-          messages: document.getElementById('messages'),
-        }
-      )
-    </script>
   </body>
 </html>

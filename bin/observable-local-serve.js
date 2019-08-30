@@ -14,8 +14,8 @@ commander
 
 process.env.PORT = commander.httport
 process.env.WS_PORT = commander.wsport
-process.env.NOTEBOOKS_DIR = commander.notebooks
-process.env.VIEWS_DIR = commander.views
+process.env.NOTEBOOKS_DIR = commander.args[0] || commander.notebooks
+process.env.VIEWS_DIR = commander.args[0] || commander.views
 process.env.FORCE = !!commander.force
 process.env.PUBLIC_DIR = commander.public || ''
 require('../server')

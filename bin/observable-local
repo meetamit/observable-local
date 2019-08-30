@@ -10,5 +10,6 @@ commander
   .version(require('../package.json').version)
   .usage('<cmd> [options]')
   .command('serve [options]', 'start a local server to serve notebooks')
+  .command('publish <notebook> [options]', 'bundle files for hosting')
   .parse(process.argv);
 

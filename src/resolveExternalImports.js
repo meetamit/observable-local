@@ -1,12 +1,15 @@
-export default async function (notebook, urlBase, prevNotebook, changedNotebookName) {
+export default async function (notebook, urlBase, prevNotebook, changedNotebookName, importPath) {
+  if (!importPath) {
+    importPath = external => `${external.charAt(0) === '/' ? urlBase : ''}${external}?${Date.now()}`
+  }
   let externals
   do {
-    externals = await resolve(notebook, urlBase, prevNotebook, changedNotebookName)
+    externals = await resolve(notebook, urlBase, prevNotebook, changedNotebookName, importPath)
   } while (externals && externals.size > 0)
   return externals
 }
 
-async function resolve (notebook, urlBase, prevNotebook, changedNotebookName) {
+async function resolve (notebook, urlBase, prevNotebook, changedNotebookName, importPath) {
   const externals = new Set()
   notebook.modules.concat().forEach(m => {
     m.variables.concat(/*clone bc may mutate the original*/).forEach(v => {
@@ -50,7 +53,7 @@ async function resolve (notebook, urlBase, prevNotebook, changedNotebookName) {
     } else {
       // external must be imported
       // console.log('importing', external)
-      const remoteNotebook = (await import(`${external.charAt(0) === '/' ? urlBase : ''}${external}?${Date.now()}`)).default
+      const remoteNotebook = (await import(importPath(external))).default
       // console.log('remoteNotebook',remoteNotebook)
       remoteNotebook.modules.forEach(m => {
         if (m.id === remoteNotebook.id) {
