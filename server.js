@@ -1,3 +1,4 @@
+const htmlInject = require('./src/htmlInject')
 const http = require('http')
 const path = require('path')
 const connect = require('connect')
@@ -38,19 +39,26 @@ const app = connect()
 app.use(compression())
 
 // serve dist directory as static files
-app.use('/run', serveStatic(appPath('./dist'  ), { fallthrough: true }))
+app.use(serveStatic(appPath('./dist'  ), { fallthrough: true }))
 
 // route that serves an html that loads a notebook and opens a websocket to recieve change events
 app.use('/run', (req, res) => {
   // See if there's a named html view for this notebook. If so, to serve instead of the default html
   // Expected name is the notebook's name UNLESS explicitly specified in query (?view=aview.html)
-  const htmlViewName = (req.url.match(/[?&]view=([^&]*)/i) && RegExp.$1) || req.url.substr(1)
-  let htmlView = appPath(`${VIEWS_DIR}/${htmlViewName}.html`)
+  const htmlViewName = (req.url.match(/[?&]view=([^&]*)/i) && RegExp.$1) || req.url.replace(/^\/|\/$/g, '')
+  let htmlView = path.resolve(`${VIEWS_DIR}/${htmlViewName}.html`)
   if(!fs.existsSync(htmlView)) {
-    htmlView = appPath('./dist/index.html')
+    htmlView = appPath('./src/index.html')
   }
+
   res.setHeader('Content-Type', 'text/html')
-  res.end(fs.readFileSync(htmlView, 'utf8'))
+  res.end(
+    htmlInject(fs.readFileSync(htmlView, 'utf8'), {
+      head: `<link rel='stylesheet' href='/observable-local.css'>`,
+      body: `<script type='text/javascript' src='/observable-local.js'></script>`,
+    })
+  )
+
 })
 
 // serve notebooks directory listing as json
@@ -149,7 +157,7 @@ var watcher = chokidar.watch(NOTEBOOKS_DIR).on('change', (filepath, meta) => {
 })
 
 let suggestedNotebook = 'welcome-notebook.js'
-const existingNotebooks = fs.readdirSync(NOTEBOOKS_DIR)
+const existingNotebooks = fs.readdirSync(NOTEBOOKS_DIR).filter(name => (/\.js$/).test(name))
 if (existingNotebooks.length === 0) {
   fs.createReadStream(appPath(`./notebooks/${suggestedNotebook}`))
     .pipe(fs.createWriteStream(`./${NOTEBOOKS_DIR}/${suggestedNotebook}`))
@@ -159,7 +167,7 @@ if (existingNotebooks.length === 0) {
   // pick a random notebook
   suggestedNotebook = existingNotebooks[Math.floor(Math.random() * existingNotebooks.length)]
 }
-const suggestedUrl = `http://localhost:${PORT}/run/${suggestedNotebook.replace(/.js$/, '')}`
+const suggestedUrl = `http://localhost:${PORT}/run/${suggestedNotebook.replace(/\.js$/, '')}`
 
 console.log(`
   Server listening on port ${PORT}
