@@ -64,8 +64,10 @@ async function resolve (notebook, urlBase, prevNotebook, changedNotebookName, im
               if (v.from === external && v.with) {
                 if (v.with && !Array.isArray(v.with)) { v.with = [v.with] }
                 v.with.forEach(w => {
-                  const replaced = m.variables.find(v => v.name === w)
-                  m.variables.splice(m.variables.indexOf(replaced), 1, {
+                  const replaced = m.variables.find(v => v.name === (w.as || w))
+                  const idx = m.variables.indexOf(replaced)
+                  if (idx === -1) { console.warn('Could not find variable', w, 'in module:', m, '.') }
+                  m.variables.splice(idx === -1 ? m.variables.length : idx, 1, {
                     from: _m.id,
                     remote: typeof w === 'string' ? w : w.name,
                     name: typeof w === 'string' ? w : w.as,
