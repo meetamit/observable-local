@@ -67,8 +67,8 @@ async function resolve (notebook, urlBase, prevNotebook, changedNotebookName, im
                   const replaced = m.variables.find(v => v.name === w)
                   m.variables.splice(m.variables.indexOf(replaced), 1, {
                     from: _m.id,
-                    remote: typeof w === 'string' ? w : w.as,
-                    name: typeof w === 'string' ? w : w.name,
+                    remote: typeof w === 'string' ? w : w.name,
+                    name: typeof w === 'string' ? w : w.as,
                   })
                 })
               }
