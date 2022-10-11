@@ -1,9 +1,9 @@
 import resolveExternalImports from './resolveExternalImports'
 import { Runtime, Library, Inspector } from '@observablehq/runtime'
 import { select, local } from 'd3-selection'
-import marked from 'marked' // 19k-20k
+import { marked } from 'marked' // 19k-20k
 import katex from '@observablehq/katex' // ~240K
-import hljs from 'highlight.js/lib/highlight' // ~33K
+import hljs from 'highlight.js/lib/core' // ~33K
 import javascript from 'highlight.js/lib/languages/javascript' // ~0K
 import './player.css'
 import './runner.css'
@@ -23,7 +23,7 @@ export default class Runner {
     const stdlib = new Library
     const stdlibRequire = stdlib.require()
     this.runtime = new Runtime(new Library(async name => {
-      if (name.indexOf('marked') === 0 ) { return marked }
+      if (name.includes('/marked.')) { return marked }
       if (name.indexOf('@observablehq/katex') === 0 ) {
         if (name.endsWith('.js')) { return katex }
         else /* it's a .css */ { return stdlibRequire(name).catch(e => null) }
@@ -114,7 +114,7 @@ export default class Runner {
             sel.append('pre').attr('class', 'code')
               .text(v.value ? formatCode(v.value) : null)
               .classed('javascript', true)
-              .each(function() { hljs.highlightBlock(this) })
+              .each(function() { hljs.highlightElement(this) })
 
             const controls = sel.append('div').attr('class', 'controls')
             controls.append('div')

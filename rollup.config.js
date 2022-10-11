@@ -1,6 +1,6 @@
 import * as meta from "./package.json";
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs';
 import {terser} from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only'
 import copy from 'rollup-plugin-copy'
@@ -15,9 +15,9 @@ const config = {
     extend: true,
   },
   plugins: [
-    resolve(),
+    nodeResolve(),
     commonjs(),
-    css({ output: `dist/${meta.name}.css` }),
+    css({ output: `${meta.name}.css` }),
   ]
 };
 
