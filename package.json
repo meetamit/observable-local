@@ -1,6 +1,6 @@
 {
   "name": "observable-local",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.5",
   "main": "dist/observable-local.js",
   "description": "A local server of Observable notebooks. Edit notebooks locally (in your text editor), view results in your local browser, and more",
   "scripts": {
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@observablehq/katex": "^0.10.2",
-    "@observablehq/runtime": "^4.25.0",
+    "@observablehq/runtime": "^5.6.0",
     "@rollup/plugin-commonjs": "^23.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
     "compression": "^1.7.4",

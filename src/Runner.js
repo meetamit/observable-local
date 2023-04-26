@@ -9,7 +9,7 @@ import './player.css'
 import './runner.css'
 import 'highlight.js/styles/xcode.css'
 import '@observablehq/katex/katex.css'
-import '@observablehq/inspector/dist/inspector.css'
+import '../node_modules/@observablehq/inspector/dist/inspector.css'// "../node_modules" is required because that module doesn't export its css
 hljs.registerLanguage('javascript', javascript);
 
 const impl = local()
