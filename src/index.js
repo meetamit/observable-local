@@ -13,33 +13,36 @@ async function start(notebookName, el, options={}) {
 }
 
 // Auto-runs
-const notebookName = location.hash
-  ? new RegExp('notebook=(?<file>[^&]*)').exec(location.hash).groups.file
-  : new RegExp('\\/run\\/(?<file>[^.]*)(\\.js)?').exec(location.pathname.replace(/\/?$/, '')).groups.file
-console.log(location.hash)
+const regexResult = location.hash
+  ? new RegExp('notebook=(?<file>[^&]*)').exec(location.hash)
+  : new RegExp('\\/run\\/(?<file>[^.]*)(\\.js)?').exec(location.pathname.replace(/\/?$/, ''))
+const notebookName = regexResult && regexResult.groups && regexResult.groups.file
 
-let notebookEl = document.getElementById('notebook')
-if (!notebookEl) {
-  notebookEl = document.createElement('div')
-  notebookEl.setAttribute('id', 'notebook')
-  document.body.insertBefore(notebookEl, document.querySelector('body script'))
-}
-
-let messagesEl = document.getElementById('messages')
-if (!messagesEl) {
-  messagesEl = document.createElement('div')
-  messagesEl.setAttribute('id', 'messages')
-  document.body.insertBefore(messagesEl, document.querySelector('body script'))
-}
-
-start(
-  notebookName,
-  notebookEl,
-  {
-    liveUpdate: true,
-    messages: messagesEl,
+// Autorun if there's a notebook name
+if (notebookName) {
+  let notebookEl = document.getElementById('notebook')
+  if (!notebookEl) {
+    notebookEl = document.createElement('div')
+    notebookEl.setAttribute('id', 'notebook')
+    document.body.insertBefore(notebookEl, document.querySelector('body script'))
   }
-)
+
+  let messagesEl = document.getElementById('messages')
+  if (!messagesEl) {
+    messagesEl = document.createElement('div')
+    messagesEl.setAttribute('id', 'messages')
+    document.body.insertBefore(messagesEl, document.querySelector('body script'))
+  }
+
+  start(
+    notebookName,
+    notebookEl,
+    {
+      liveUpdate: true,
+      messages: messagesEl,
+    }
+  )
+}
 
 
 export default {
