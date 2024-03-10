@@ -13,9 +13,10 @@ async function start(notebookName, el, options={}) {
 }
 
 // Auto-runs
-const regexResult = location.hash
-  ? new RegExp('notebook=(?<file>[^&]*)').exec(location.hash)
-  : new RegExp('\\/run\\/(?<file>[^.]*)(\\.js)?').exec(location.pathname.replace(/\/?$/, ''))
+let regexResult = location.hash ? new RegExp('notebook=(?<file>[^&]*)').exec(location.hash) : null
+// regexResult = regexResult || new RegExp('\\/run\\/(?<file>[^.]*)(\\.js)?').exec(location.pathname.replace(/\/?$/, ''))
+regexResult = regexResult || new RegExp('\\/run\\/(?<file>.*)(\\.js)?').exec(location.pathname.replace(/\/?$/, ''))
+
 const notebookName = regexResult && regexResult.groups && regexResult.groups.file
 
 // Autorun if there's a notebook name
